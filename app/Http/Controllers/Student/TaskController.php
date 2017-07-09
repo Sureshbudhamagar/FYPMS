@@ -67,29 +67,27 @@ class TaskController extends Controller
 
       \DB::enableQueryLog();
 
-      // verify is this task belong to (is assigned) to the current logged in student or not.
-      $assigned_to_this_student = \DB::table('users')
-                ->join('project', 'project.created_by', '=', 'users.id')
-                ->join('supervisor_project_rel as spr', 'spr.project_id', '=', 'project.id')
-                ->join('tasks', 'spr.supervisor_id', '=', 'tasks.supervisor_id')
-                ->where('users.id', '=', $student_id)
-                // ->where('tasks.project_id', 'project.id')
-                ->where('tasks.id', '=', $task_id)
-                ->select('spr.supervisor_id', 'project.id as project_id', 'project.title', 'project.code')
-                ->first();
+       $task = Task::find($task_id);     
 
-      // dd(\DB::getQueryLog());
+      //dd(\DB::getQueryLog());
       // dd($assigned_to_this_student);
 
       // retrieve task detail and display form to submit task assignment
-      if($assigned_to_this_student) {
-        $task = Task::where('supervisor_id', $assigned_to_this_student->supervisor_id)
-                ->where('project_id', $assigned_to_this_student->project_id)
-                ->where('id', $task_id)
+      if($task) {
+         // verify is this task belong to (is assigned) to the current logged in student or not.
+        $assigned_to_this_student = \DB::table('users')
+                ->join('project', 'project.created_by', '=', 'users.id')
+                ->join('supervisor_project_rel as spr', 'spr.project_id', '=', 'project.id')
+                ->where('users.id', '=', $student_id)
+                ->where('project.status', 1)
+                ->where('project.id', '=', $task->project_id)
+                ->select('spr.supervisor_id', 'project.id as project_id', 'project.title', 'project.code', 'project.status')
                 ->first();
 
-        // dd($task);
-
+         /*if project  is not accepted by admin*/
+         if(isset($assigned_to_this_student) && $assigned_to_this_student->status != 1)
+         return view('student/task/undone', compact('task'));
+        
         // get submission_id if submitted already
         $submission = Submission::where('task_id', $task_id)
         ->where('student_id', $student_id)

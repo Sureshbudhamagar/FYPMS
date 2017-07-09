@@ -77,13 +77,15 @@ class SubmissionController extends Controller
 
       // $submission->attachment = $file;
       $submission->attachment = $attachment;
+      $submission->read = '0';
 
-      // dd($submission);
 
       $status = $submission->save();
 
       if($status) {
         $request->session()->flash('alert-success', 'Assignment Submitted Successfully!');
+         $task->status = 1;
+         $task->save();
       } else {
         $request->session()->flash('alert-error', 'Error Submitting Assignment!');
       }

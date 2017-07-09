@@ -48,6 +48,7 @@ Route::get('/home', 'HomeController@index');
 // routes for admin
 Route::group(['middleware' => ['web'], 'prefix' => 'admin'], function() {
   Route::get('dashboard', 'Admin\DashboardController@index');
+  Route::get('register', 'Admin\DashboardController@register');
   Route::get('student/list', 'Admin\ProjectController@students');
   Route::get('supervisor/list', 'Admin\ProjectController@supervisors');
 

@@ -16,7 +16,7 @@
                   // $created_at = '08/04/2010 22:15:00';
                   $created_at = date('M d Y | h:i a', strtotime($inv->created_at));
                   ?>
-                  <strong>Project Title: {{ $inv->title.'-'.$inv->id }}</strong> <br> {{ $created_at }} | {{ time_elapsed_string($inv->created_at) }}
+                  <strong>Project Title: {{ $inv->title }}</strong> <br> {{ $created_at }} | {{ time_elapsed_string($inv->created_at) }}
 
                   <br><br>
 

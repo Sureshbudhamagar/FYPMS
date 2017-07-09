@@ -19,7 +19,7 @@ class TaskController extends Controller
     {
       $supervisor_id = \Auth::user()->id;
       
-      $tasks = Task::all()->sortByDesc('id')->where('supervisor_id', $supervisor_id);
+      $tasks = Task::all()->sortByDesc('id')->where('supervisor_id', $supervisor_id)->where('supervisor_id', $supervisor_id);
 
       return view('supervisor/task/list', compact('tasks'));
     }
@@ -34,6 +34,8 @@ class TaskController extends Controller
         $supervisor_id = \Auth::user()->id;
 
         $projects = \App\Models\Project::leftjoin('supervisor_project_rel as spr', 'spr.project_id', '=', 'project.id')
+                  ->leftjoin('project_invitation as pi', 'pi.project_id', '=', 'project.id')
+                  ->where('pi.status', '=', 'accepted')
                   ->where('spr.supervisor_id', '=', $supervisor_id)
                   ->select('project.title', 'project.id')
                   ->get();
@@ -57,6 +59,7 @@ class TaskController extends Controller
         $task->title = $request->title;
         $task->descr = $request->descr;
         $task->project_id = $request->project_id;
+        $task->status = 0;
 
         $this->validate($request, [
               'title' =>  'required',

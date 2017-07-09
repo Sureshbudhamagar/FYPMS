@@ -8,7 +8,9 @@
                 <div class="panel-heading">
                   {{ $role }} List 
 
+                  @if($role == 'Supervisor')
                   <a href="{{ url('admin/supervisor/create') }}" style="float: right">Add Supervisor</a>
+                  @endif     
 
                 </div>
 

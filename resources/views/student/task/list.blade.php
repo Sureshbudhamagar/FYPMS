@@ -10,7 +10,8 @@
                 <div class="panel-heading"><h4>{{ $project->code }}: {{ $project->title }} <span style="float:right; font-size: 12px">{{ $project->supervisor }}</span></h4> </div>
 
                 @foreach($project->tasks as $task)
-                <div class="panel-body">
+                <?php $class = ($task->status = 0)?'label-primary':''; ?>
+                <div class="panel-body {{ $class }}">
                   <?php
                   // $created_at = '08/04/2010 22:15:00';
                   $created_at = date('M d Y | h:i a', strtotime($task->created_at));

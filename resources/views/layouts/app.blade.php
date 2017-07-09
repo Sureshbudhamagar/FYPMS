@@ -46,7 +46,7 @@
                         &nbsp;
                         @if (!Auth::guest())
                           @if(Auth::user()->role == 'admin')
-                          <li><a href="{{ url('admin/project/list') }}">Projects</a></li>
+                          <li><a href="{{ url('admin/project/list') }}">Projects  <span class="badge">{{ App\Models\Project::where('status', '0')->count()}}</span></a></li>
                           <li><a href="{{ url('admin/supervisor/list') }}">Supervisors</a></li>
                           <li><a href="{{ url('admin/student/list') }}">Students</a></li>
                           <li><a href="{{ url('admin/message/inbox') }}">Inbox <span class="badge">{{ App\Models\Message::where('status', 0)->where('to', Auth::user()->id)->count()}}</span></a></li>
@@ -58,8 +58,13 @@
                         &nbsp;
                         @if (!Auth::guest())
                           @if(Auth::user()->role == 'supervisor')
+                            <?php $task = \App\Models\Task::leftjoin('submission as s', 's.task_id', '=', 'tasks.id')
+                                      ->where('s.read', '0')
+                                      ->where('tasks.supervisor_id', Auth::user()->id)
+                                      ->count();
+                           ?>
                           <li><a href="{{ url('supervisor/project/list') }}">Supervised  Project</a></li>
-                          <li><a href="{{ url('supervisor/task') }}">Task</a></li>
+                          <li><a href="{{ url('supervisor/task') }}">Task <span class="badge">{{ $task }}</span></a></li>
                           <li><a href="{{ url('supervisor/task/create') }}">Create a Task</a></li>
                           <li><a href="{{ url('supervisor/project-invitation') }}">Invitations <span class="badge">{{ App\Models\ProjectInvitation::where('status', 'pending')->where('email', Auth::user()->email)->count()}}</span></a></li>
                           <li><a href="{{ url('supervisor/message/inbox') }}">Inbox  <span class="badge">{{ App\Models\Message::where('status', 0)->where('to', Auth::user()->id)->count()}}</span></a></li>
@@ -71,9 +76,14 @@
                         &nbsp;
                         @if (!Auth::guest())
                           @if(Auth::user()->role == 'student')
+                          <?php $task = \App\Models\Task::leftjoin('project as pr', 'pr.id', '=', 'tasks.project_id')
+                                      ->where('tasks.status', 0)
+                                      ->where('pr.created_by', Auth::user()->id)
+                                      ->count();
+                           ?>
                           <li><a href="{{ url('student/project/create') }}">Submit Project</a></li>
                           <li><a href="{{ url('student/project') }}">My Projects</a></li>
-                          <li><a href="{{ url('student/assignment') }}">Assignments</a></li>
+                          <li><a href="{{ url('student/assignment') }}">Assignments  <span class="badge">{{ $task }}</span></a></li>
                           <li><a href="{{ url('student/project-invitation') }}">Invitations <span class="badge">{{ App\Models\ProjectInvitation::where('status', 'pending')->where('email', Auth::user()->email)->count()}}</span></a></li>
                           <li><a href="{{ url('student/message/inbox') }}">Inbox  <span class="badge">{{ App\Models\Message::where('status', 0)->where('to', Auth::user()->id)->count()}}</span></a></li>
                           @endif
@@ -95,6 +105,9 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->role == 'admin')
+                               <li><a href="{{ url('admin/register') }}">Add Admin</a></li>
+                                @endif
                                     <li>
                                         <a href="{{ url('change-password') }}">Change password</a>
                                         <a href="{{ url('/logout') }}"

@@ -16,4 +16,11 @@ class Task extends Model
     'attachment',
     'deadline',
     ];
+
+
+
+    function submission()
+    {
+        return $this->hasMany('App\Models\Submission', 'task_id');
+    }
 }

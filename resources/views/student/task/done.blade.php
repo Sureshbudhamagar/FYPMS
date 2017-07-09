@@ -5,9 +5,8 @@
     <div class="row">
         <div class="col-md-12 col-md-offset-0">
 
-
             <div class="panel panel-default">
-                <div class="panel-heading"><h4>{{ $task->title }}
+                <div class="panel-heading text-uppercase"><h4>{{ $task->title }}
                   <span style="float: right; font-size: 12px">
                     <?php
                       $deadline = date('M d Y | h:i a', strtotime($task->deadline));

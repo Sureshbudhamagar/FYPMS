@@ -19,11 +19,13 @@
 
                       <tbody>
                         @foreach($tasks as $row)
+                        <?php $count = $row->submission->where('read','0')->count(); ?>
                         <tr>
-                          <td>{{ $row->title }}</td>
+                          <td class="text-uppercase">{{ $row->title }}</td>
                           <td>
                             <a href="{{ route('task.edit', $row->id) }}" class="btn btn-primary">Edit</a>
-                            <a href="{{ url('supervisor/task/submissions/' . $row->id) }}" title="submitted tasks by students" class="btn btn-info">Submitted Tasks</a>
+                            <a href="{{ url('supervisor/task/submissions/' . $row->id) }}" title="submitted tasks by students" class="btn btn-info">Submitted Tasks </a>
+                            <span class="badge badge-primary"> {{ $count }}</span>
                           </td>
                         </tr>
                         @endforeach

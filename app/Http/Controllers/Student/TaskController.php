@@ -42,8 +42,13 @@ class TaskController extends Controller
 
           // get supervisor name
           $supervisor = \DB::table('users')->where('id', '=', $sp->supervisor_id)->first();
-          $projects[$key]->supervisor = $supervisor->fname . ' ' . $supervisor->lname;
+          if($supervisor){
+            $projects[$key]->supervisor = $supervisor->fname . ' ' . $supervisor->lname;
+          }
+          else{
 
+          $projects[$key]->supervisor = 'no super visor';
+          }
 
           $projects[$key]->tasks = $tasks;
 
@@ -57,6 +62,7 @@ class TaskController extends Controller
 
 
       }
+
 
       return view('student/task/list', compact('projects'));
     }

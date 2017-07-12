@@ -28,7 +28,7 @@
 @endif
 
  @if(Session::has('error'))
-        <div class="alert alert-info" >
+        <div class="alert alert-danger" >
             <div class="container">
                 <b>{{ Session::get('error') }}</b>
             </div>

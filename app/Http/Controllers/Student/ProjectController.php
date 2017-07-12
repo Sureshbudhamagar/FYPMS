@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Student;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
 use App\Models\Project;
 use App\Models\StudentProject;
 use App\Models\SupervisorProject;
 use App\Models\ProjectInvitation;
+use App\Models\StudentProjectRel;
+use App\Models\SupervisorProjectRel;
+use Auth;
 
 class ProjectController extends Controller
 {
@@ -63,6 +67,7 @@ class ProjectController extends Controller
       echo '</pre>';
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -70,8 +75,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
-        return view('student/project/form');
+        $users = User::where('id','!=',Auth::user()->id)->get();
+        return view('student/project/form', compact('projects'));
     }
 
     /**
@@ -90,7 +95,7 @@ class ProjectController extends Controller
         $project = new Project();
 
         $this->validate($request, [
-            'title' =>  'required',
+            'title' =>  'required|unique:project',
             'image' => 'mimes:jpg,jpeg,gif,png|max:2048'
         ]);
 
@@ -134,6 +139,12 @@ class ProjectController extends Controller
 
         // send email invitation to team
         foreach($team_email as $temail) {
+
+        $user = User::where('email',$temail)->first();
+        $alreadyExist = projectinvitation::where('project_id',$project->id)->where('email',$temail)->first();
+        if($alreadyExist)
+          continue;
+
           $projectinvitation = new projectinvitation();
           $projectinvitation->project_id = $project_id;
           $projectinvitation->email = $temail;
@@ -145,6 +156,12 @@ class ProjectController extends Controller
           $projectinvitation->message = $message;
 
           $projectinvitation->save();
+
+                 /*add student relation*/
+          $studentprojectrel = new StudentProjectRel();
+          $studentprojectrel->project_id = $project_id;
+          $studentprojectrel->student_id = $user->id;
+          $studentprojectrel->save();
 
           //
           $data = array(
@@ -171,6 +188,12 @@ class ProjectController extends Controller
 
         // send email invitation to team
         foreach($supervisor_email as $semail) {
+
+        $user = User::where('email',$semail)->first();
+        $alreadyExist = projectinvitation::where('project_id',$project->id)->where('email',$semail)->first();
+        if($alreadyExist)
+          continue;
+
           $projectinvitation = new projectinvitation();
           $projectinvitation->project_id = $project_id;
           $projectinvitation->email = $semail;
@@ -183,6 +206,12 @@ class ProjectController extends Controller
 
           // send email invitation
           $projectinvitation->save();
+          /*add supervisor relation*/
+          $supervisorprojectrel = new SupervisorProjectRel();
+          $supervisorprojectrel->project_id = $project_id;
+          $supervisorprojectrel->supervisor_id = $user->id;
+          $supervisorprojectrel->save();
+
 
           $data = array(
             'project_id'    =>  $project_id,

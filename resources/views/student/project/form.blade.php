@@ -61,15 +61,15 @@
 
                         <label for="">Invite team member by email</label>
                         <br>
-                        <input type="text" name="team_email[]" class="form-control">
+                        <input type="text" name="team_email[]" class="form-control studenttypeahead">
                         <br>
-                        <input type="text" name="team_email[]" class="form-control">
+                        <input type="text" name="team_email[]" class="form-control studenttypeahead">
                         <br>
-                        <input type="text" name="team_email[]" class="form-control">
+                        <input type="text" name="team_email[]" class="form-control studenttypeahead">
                         <br>
-                        <input type="text" name="team_email[]" class="form-control">
+                        <input type="text" name="team_email[]" class="form-control studenttypeahead">
                         <br>
-                        <input type="text" name="team_email[]" class="form-control">
+                        <input type="text" name="team_email[]" class="form-control studenttypeahead">
                       </div>
 
                       <div class="form-group">
@@ -78,12 +78,12 @@
                         <!-- <input type="text" name="team" class="form-control"> -->
                         <!-- <autocomplete :suggestions="cities" :selection.sync="value"></autocomplete> -->
 
-
-                        <input type="text" name="supervisor_email[]" class="form-control">
+ 
+                        <input type="text" name="supervisor_email[]" class="form-control supervisortypeahead">
                         <br>
-                        <input type="text" name="supervisor_email[]" class="form-control">
+                        <input type="text" name="supervisor_email[]" class="form-control supervisortypeahead">
                         <br>
-                        <input type="text" name="supervisor_email[]" class="form-control">
+                        <input type="text" name="supervisor_email[]" class="form-control supervisortypeahead">
                       </div>
                       <?php /*
                       <div class="form-group">

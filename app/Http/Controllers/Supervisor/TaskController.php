@@ -35,13 +35,10 @@ class TaskController extends Controller
 
         $projects = \App\Models\Project::leftjoin('supervisor_project_rel as spr', 'spr.project_id', '=', 'project.id')
                   ->leftjoin('project_invitation as pi', 'pi.project_id', '=', 'project.id')
-                  ->where('pi.status', '=', 'accepted')
                   ->where('spr.supervisor_id', '=', $supervisor_id)
                   ->select('project.title', 'project.id')
+                  ->groupby('project.id')
                   ->get();
-
-        // dd($projects);
-
         return view('supervisor/task/form', compact('projects'));
     }
 
@@ -53,8 +50,16 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $task = new Task();
+         $supervisorEmail = \Auth::user()->email;
+         $project = \App\Models\ProjectInvitation::where('email', $supervisorEmail)
+                  ->where('project_id', $request->project_id)
+                  ->first();
+        if($project->status == 'pending'){
+            $request->session()->flash('error', 'Error, Project invitation not accepted!');
+            return redirect()->back()->withinput();
+        }
 
+        $task = new Task();
         $task->supervisor_id = \Auth::user()->id;
         $task->title = $request->title;
         $task->descr = $request->descr;

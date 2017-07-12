@@ -82,6 +82,9 @@ Route::group(['prefix' => 'supervisor'], function() {
 
 // routes for student
 Route::group(['middleware' => ['auth'], 'prefix' => 'student'], function() {
+
+  Route::get('list', 'Student\DashboardController@studentList');
+  Route::get('slist', 'Student\DashboardController@supervisorList');
   Route::get('dashboard', 'Student\DashboardController@index');
   // Student Project CRUD
   Route::resource('project', 'Student\ProjectController');

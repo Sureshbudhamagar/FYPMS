@@ -190,12 +190,65 @@
 
 <!-- Scripts -->
 <script src="/js/app.js"></script>
+<script src="/js/bootstrap3-typeahead.min.js"></script>
 
 @yield('page_specific_scripts')
 
 
 
 <script>
+
+var $input = $(".studenttypeahead");
+   $input.typeahead({
+            source: function (query, process) {
+                return $.get('{{ url('/student/list') }}?query=' + query, function (data) {
+                    return process(data);
+                });
+            },
+            autoSelect: true
+        });
+$input.change(function() {
+  var current = $input.typeahead("getActive");
+  if (current) {
+    // Some item from your model is active!
+    if (current.name == $input.val()) {
+      // This means the exact match is found. Use toLowerCase() if you want case insensitive match.
+    } else {
+      // This means it is only a partial match, you can either add a new item
+      // or take the active if you don't want new items
+    }
+  } else {
+    // Nothing is active so it is a new value (or maybe empty value)
+  }
+});
+
+/*supervisor*/
+var $sinput = $(".supervisortypeahead");
+   $sinput.typeahead({
+            source: function (query, process) {
+                return $.get('{{ url('/student/slist') }}?query=' + query, function (data) {
+                    return process(data);
+                });
+            },
+            autoSelect: true
+        });
+$sinput.change(function() {
+  var current = $sinput.typeahead("getActive");
+  if (current) {
+    // Some item from your model is active!
+    if (current.name == $sinput.val()) {
+      // This means the exact match is found. Use toLowerCase() if you want case insensitive match.
+    } else {
+      // This means it is only a partial match, you can either add a new item
+      // or take the active if you don't want new items
+    }
+  } else {
+    // Nothing is active so it is a new value (or maybe empty value)
+  }
+});
+
+
+
 new Vue({
   el: '#app',
   data: {

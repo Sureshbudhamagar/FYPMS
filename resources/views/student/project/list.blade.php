@@ -28,11 +28,19 @@
                       @foreach($projects as $project)
                       <tr>
                         <td>{{ $sn++ }}</td>
-                        <td>{{ $project->created_at }}</td>
+                        <td>{{ date('F j, Y, g:i a', strtotime($project->created_at)) }}</td>
                         <td>{{ $project->pid }}</td>
                         <td>{{ $project->code }}</td>
                         <td>{{ $project->title }}</td>
-                        <td>@if ($project->status == '0') Submitted @endif </td>
+                        <td> @if($project->status == 0)
+                              Submitted
+                            @elseif($project->status == 1)
+                              Accepted
+                            @elseif($project->status == 2)
+                              Onhold
+                            @else
+                              Rejected
+                            @endif</td>
                         <td>
                           <a href="{{ route('project.edit', $project->pid) }}" class="btn btn-success btn-xs" style="float: left">Edit</a>
                           <?php /*
